@@ -7,6 +7,10 @@ export VAULT_ADDR=http://127.0.0.1:8200
 #For Windows
 $env:VAULT_ADDR = "http://127.0.0.1:8200"
 
+#Log into the vault server
+#Use the root token from the output
+vault login
+
 #Write a secret
 vault kv put secret/hg2g answer=42
 
