@@ -7,3 +7,9 @@
 
 # .tfvars files
 *.tfvars
+
+# vault files
+**/vault/data/*
+**/vault/logs/*
+**/vault/policies/*
+*.seal

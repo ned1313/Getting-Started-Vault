@@ -1,0 +1,29 @@
+### BEGIN INIT INFO
+# Provides:          vault
+# Required-Start:    $local_fs $remote_fs
+# Required-Stop:     $local_fs $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Vault server
+# Description:       Vault secret management tool
+### END INIT INFO
+
+[Unit]
+Description=Vault secret management tool
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+User=vault
+Group=vault
+PIDFile=/var/run/vault/vault.pid
+ExecStart=/usr/local/bin/vault server -config=/etc/vault/vault_server.hcl -log-level=debug
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+KillSignal=SIGTERM
+Restart=on-failure
+RestartSec=42s
+LimitMEMLOCK=infinity
+
+[Install]
+WantedBy=multi-user.target

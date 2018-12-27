@@ -1,0 +1,17 @@
+#PowerShell
+$env:VAULT_ADDR = "http(s)://your.vault.address:8200"
+
+#Bash
+export VAULT_ADDR=http(s)://your.vault.address:8200
+
+vault login
+
+vault secrets list
+
+vault write secret/my-secret ford=prefect
+
+vault read secret/my-secret
+
+vault write secret/my-secret ford=prefect arthur=dent
+
+vault delete secret/my-secret
