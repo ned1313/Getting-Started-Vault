@@ -19,7 +19,7 @@ export AZURE_TENANT_ID=""
 #Login into Azure CLI
 az login 
 
-#Create an Service Principal and grant is owner rights on the subscription
+#Create an Service Principal and grant owner rights on the subscription
 az ad sp create-for-rbac --name vaultsp --role owner --scopes /subscriptions/$AZURE_SUBSCRIPTION_ID
 
 

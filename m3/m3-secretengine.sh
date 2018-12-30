@@ -27,8 +27,15 @@ vault secrets list
 vault list zaphod
 vault read zaphod/dent
 
+#Upgrade the secrets engine to v2
+vault kv enable-versioning zaphod
+
+#Create a new secrets engine on v2
+vault secrets enable -path=marvin -version=2 kv 
+
 #Disable the secrets engine
 vault secrets disable zaphod
+vault secrets disable marvin
 vault secrets list
 
 
