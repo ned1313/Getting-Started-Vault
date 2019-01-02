@@ -51,6 +51,22 @@ vault kv get secret/hg2g
 vault kv get -version=1 secret/hg2g
 vault kv get -version=2 secret/hg2g
 
-#Delete the secrets
+#Delete the secret
 vault kv delete secret/hg2g
 
+#Look at the metadata for the secret
+vault kv get secret/hg2g
+
+#Version 1 still exists
+vault kv get -version=1 secret/hg2g
+
+#Undelete version 2
+vault kv undelete -versions=2 secret/hg2g
+vault kv get secret/hg2g
+
+#Destroy version 1
+vault kv destroy -versions=1 secret/hg2g
+vault kv get -version=1 secret/hg2g
+
+#Delete the whole secret
+vault kv metadata delete secret/hg2g
