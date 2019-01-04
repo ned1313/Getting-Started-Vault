@@ -1,7 +1,20 @@
 #Install vault
 #For Windows
 $vaultVersion = "1.0.1"
-Invoke-WebRequest -Uri 
+Invoke-WebRequest -Uri https://releases.hashicorp.com/vault/$vaultVersion/vault_$($vaultVersion)_windows_amd64.zip -OutFile .\vault_$($vaultVersion)_windows_amd64.zip
+Expand-Archive .\vault_$($vaultVersion)_windows_amd64.zip
+cd .\vault_$($vaultVersion)_windows_amd64
+#Copy vault executable to a location include in your path variable
+
+#For Linux
+VAULT_VERSION="1.0.1"
+wget https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip
+
+#Install unzip if necessary
+sudo apt install unzip -y
+unzip vault_${VAULT_VERSION}_linux_amd64.zip
+sudo chown root:root vault
+sudo mv vault /usr/local/bin/
 
 #Start the Dev server for vault
 vault server -dev 
@@ -34,6 +47,8 @@ Invoke-WebRequest -Method Post -Uri $env:VAULT_ADDR/v1/secret/data/marvin `
 vault kv get secret/hg2g
 
 #For Linux
+#Install jq if necessary
+sudo apt install jq -y
 curl --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_ADDR/v1/secret/data/marvin | jq
 
 #For Windows
@@ -56,22 +71,12 @@ vault kv get secret/hg2g
 vault kv get -version=1 secret/hg2g
 vault kv get -version=2 secret/hg2g
 
-#Delete the secret
+#For Linux
+curl --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_ADDR/v1/secret/data/hg2g?version=1 | jq .data.data
+
+#For Windows
+Invoke-WebRequest -Method Get -Uri $env:VAULT_ADDR/v1/secret/data/hg2g?version=1 `
+ -UseBasicParsing -Headers $headers
+
+#Delete the secrets
 vault kv delete secret/hg2g
-
-#Look at the metadata for the secret
-vault kv get secret/hg2g
-
-#Version 1 still exists
-vault kv get -version=1 secret/hg2g
-
-#Undelete version 2
-vault kv undelete -versions=2 secret/hg2g
-vault kv get secret/hg2g
-
-#Destroy version 1
-vault kv destroy -versions=1 secret/hg2g
-vault kv get -version=1 secret/hg2g
-
-#Delete the whole secret
-vault kv metadata delete secret/hg2g
