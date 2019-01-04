@@ -1,3 +1,8 @@
+#Install vault
+#For Windows
+$vaultVersion = "1.0.1"
+Invoke-WebRequest -Uri 
+
 #Start the Dev server for vault
 vault server -dev 
 
