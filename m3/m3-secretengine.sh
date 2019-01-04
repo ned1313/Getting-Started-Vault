@@ -50,8 +50,13 @@ curl --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_ADDR/v1/secret/data/hg2g?vers
 Invoke-WebRequest -Method Get -Uri $env:VAULT_ADDR/v1/secret/data/hg2g?version=1 `
  -UseBasicParsing -Headers $headers
 
-#Delete the secrets
+#Delete a secrets
 vault kv delete secret/hg2g
+vault kv get secret/hg2g
+vault kv get -version=1 secret/hg2g
+
+#Undelete a secret
+vault kv undelete -versions=2 secret/hg2g
 vault kv get secret/hg2g
 
 #Destroy the secrets
@@ -59,14 +64,22 @@ vault kv destroy -versions=1,2 secret/hg2g
 vault kv get secret/hg2g
 
 #For Linux
-curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST $VAULT_ADDR/v1/secret/destroy/marvin --data '{"versions": [1]}'
+curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST $VAULT_ADDR/v1/secret/destroy/hg2g --data '{"versions": [1,2]}'
 
 #For Windows
-Invoke-WebRequest -Method Post -Uri $env:VAULT_ADDR/v1/secret/destroy/marvin `
- -UseBasicParsing -Headers $headers -Body '{"versions": [1]}'
+Invoke-WebRequest -Method Post -Uri $env:VAULT_ADDR/v1/secret/destroy/hg2g `
+ -UseBasicParsing -Headers $headers -Body '{"versions": [1,2]}'
 
 #Remove all data about secrets
 vault kv metadata delete secret/hg2g
+vault kv get secret/hg2g
+
+#For Linux
+curl --header "X-Vault-Token: $VAULT_TOKEN" --request DELETE $VAULT_ADDR/v1/secret/metadata/hg2g
+
+#For Windows
+Invoke-WebRequest -Method Delete -Uri $env:VAULT_ADDR/v1/secret/metadata/hg2g `
+ -UseBasicParsing -Headers $headers
 
 ####################### Adding a Secrets Engine ###########################
 #Enable a new secrets engine path
@@ -90,11 +103,16 @@ vault secrets list
 vault list zaphod
 vault read zaphod/dent
 
+#Delete secret
+vault kv delete zaphod/dent
+vault kv get zaphod/dent
+
 #Upgrade the secrets engine to v2
 vault kv enable-versioning zaphod
 
 #Create a new secrets engine on v2
 vault secrets enable -path=android -version=2 kv 
+vault secrets list -format=json
 
 #Disable the secrets engine
 vault secrets disable zaphod
