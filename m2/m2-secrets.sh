@@ -80,4 +80,25 @@ Invoke-WebRequest -Method Get -Uri $env:VAULT_ADDR/v1/secret/data/hg2g?version=1
 
 #Delete the secrets
 vault kv delete secret/hg2g
+vault kv get secret/hg2g
+
+#For Linux
+curl --header "X-Vault-Token: $VAULT_TOKEN" --request DELETE $VAULT_ADDR/v1/secret/data/marvin
+
+#For Windows
+Invoke-WebRequest -Method Delete -Uri $env:VAULT_ADDR/v1/secret/data/marvin `
+ -UseBasicParsing -Headers $headers
+
+#Destroy the secrets
+vault kv destroy -versions=1,2 secret/hg2g
+vault kv get secret/hg2g
+
+#For Linux
+curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST $VAULT_ADDR/v1/secret/destroy/marvin --data '{"versions": [1]}'
+
+#For Windows
+Invoke-WebRequest -Method Post -Uri $env:VAULT_ADDR/v1/secret/destroy/marvin `
+ -UseBasicParsing -Headers $headers -Body '{"versions": [1]}'
+
+
 
