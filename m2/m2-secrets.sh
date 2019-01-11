@@ -1,4 +1,5 @@
-#Install vault
+################# Installing Vault ##########################
+
 #For Windows
 $vaultVersion = "1.0.1"
 Invoke-WebRequest -Uri https://releases.hashicorp.com/vault/$vaultVersion/vault_$($vaultVersion)_windows_amd64.zip -OutFile .\vault_$($vaultVersion)_windows_amd64.zip
@@ -16,6 +17,8 @@ unzip vault_${VAULT_VERSION}_linux_amd64.zip
 sudo chown root:root vault
 sudo mv vault /usr/local/bin/
 
+################# Starting the Dev server ######################
+
 #Start the Dev server for vault
 vault server -dev 
 
@@ -30,9 +33,12 @@ $env:VAULT_TOKEN = "AddYourVaultTokenHere"
 $headers = @{
     X-Vault-Token = $env:VAULT_TOKEN
 }
+
 #Log into the vault server
 #Use the root token from the output
 vault login
+
+############## Basic Secret Commands for KV ######################
 
 #Write a secret
 vault kv put secret/hg2g answer=42
@@ -55,28 +61,9 @@ curl --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_ADDR/v1/secret/data/marvin | 
 Invoke-WebRequest -Method Get -Uri $env:VAULT_ADDR/v1/secret/data/marvin `
  -UseBasicParsing -Headers $headers
 
-#Get it in JSON
-vault kv get -format=json secret/hg2g
-
-#Parse the output using jq
-vault kv get -format=json secret/hg2g | jq -r .data.data.answer
-
 #Put a new secret in and a new value for an existing secret
 vault kv put secret/hg2g answer=54 ford=prefect
-
-#Get all the secrets in the path
 vault kv get secret/hg2g
-
-#Get all the version 1 secrets and version 2
-vault kv get -version=1 secret/hg2g
-vault kv get -version=2 secret/hg2g
-
-#For Linux
-curl --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_ADDR/v1/secret/data/hg2g?version=1 | jq .data.data
-
-#For Windows
-Invoke-WebRequest -Method Get -Uri $env:VAULT_ADDR/v1/secret/data/hg2g?version=1 `
- -UseBasicParsing -Headers $headers
 
 #Delete the secrets
 vault kv delete secret/hg2g
@@ -88,17 +75,6 @@ curl --header "X-Vault-Token: $VAULT_TOKEN" --request DELETE $VAULT_ADDR/v1/secr
 #For Windows
 Invoke-WebRequest -Method Delete -Uri $env:VAULT_ADDR/v1/secret/data/marvin `
  -UseBasicParsing -Headers $headers
-
-#Destroy the secrets
-vault kv destroy -versions=1,2 secret/hg2g
-vault kv get secret/hg2g
-
-#For Linux
-curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST $VAULT_ADDR/v1/secret/destroy/marvin --data '{"versions": [1]}'
-
-#For Windows
-Invoke-WebRequest -Method Post -Uri $env:VAULT_ADDR/v1/secret/destroy/marvin `
- -UseBasicParsing -Headers $headers -Body '{"versions": [1]}'
 
 
 
