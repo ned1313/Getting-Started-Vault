@@ -31,3 +31,5 @@ vault write database/roles/dev-role \
     creation_statements="CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}';GRANT ALL ON devdb.* TO '{{name}}'@'%';" \
     default_ttl="1h" \
     max_ttl="24h"
+
+vault read database/creds/dev-role
