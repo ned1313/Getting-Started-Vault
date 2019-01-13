@@ -22,8 +22,6 @@ $headers = @{
 vault login
 
 ############## Advanced Secret Commands for KV ####################
-## Skip this part if you've already done module 2 and left the
-## Dev server running
 
 #Write a secret
 vault kv put secret/hg2g answer=42
@@ -53,10 +51,28 @@ Invoke-WebRequest -Method Get -Uri $env:VAULT_ADDR/v1/secret/data/hg2g?version=1
 #Delete a secrets
 vault kv delete secret/hg2g
 vault kv get secret/hg2g
+
+#For Linux
+curl --header "X-Vault-Token: $VAULT_TOKEN" --request DELETE \
+  $VAULT_ADDR/v1/secret/data/hg2g
+
+#For Windows
+Invoke-WebRequest -Method Delete -Uri $env:VAULT_ADDR/v1/secret/data/hg2g `
+ -UseBasicParsing -Headers $headers 
+
 vault kv get -version=1 secret/hg2g
 
 #Undelete a secret
 vault kv undelete -versions=2 secret/hg2g
+
+#For Linux
+curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST \
+  $VAULT_ADDR/v1/secret/undelete/hg2g  --data '{"versions": [2]}'
+
+#For Windows
+Invoke-WebRequest -Method Post -Uri $env:VAULT_ADDR/v1/secret/undelete/hg2g `
+ -UseBasicParsing -Headers $headers -Body '{"versions": [2]}'
+
 vault kv get secret/hg2g
 
 #Destroy the secrets
@@ -64,7 +80,8 @@ vault kv destroy -versions=1,2 secret/hg2g
 vault kv get secret/hg2g
 
 #For Linux
-curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST $VAULT_ADDR/v1/secret/destroy/hg2g --data '{"versions": [1,2]}'
+curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST \
+  $VAULT_ADDR/v1/secret/destroy/hg2g --data '{"versions": [1,2]}'
 
 #For Windows
 Invoke-WebRequest -Method Post -Uri $env:VAULT_ADDR/v1/secret/destroy/hg2g `
@@ -75,7 +92,8 @@ vault kv metadata delete secret/hg2g
 vault kv get secret/hg2g
 
 #For Linux
-curl --header "X-Vault-Token: $VAULT_TOKEN" --request DELETE $VAULT_ADDR/v1/secret/metadata/hg2g
+curl --header "X-Vault-Token: $VAULT_TOKEN" --request DELETE \
+  $VAULT_ADDR/v1/secret/metadata/hg2g
 
 #For Windows
 Invoke-WebRequest -Method Delete -Uri $env:VAULT_ADDR/v1/secret/metadata/hg2g `
