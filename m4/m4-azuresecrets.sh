@@ -1,53 +1,13 @@
-#Powershell users
-#Install the Azure CLI
-choco install azure-cli -y
-
-
-#Linux users
-#Install Azure CLI per your distro
-# https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
-
-#Set up variables
-
 # LINUX
-export AZURE_SUBSCRIPTION_ID="4d8e572a-3214-40e9-a26f-8f71ecd24e0d"
-export AZURE_TENANT_ID="f06624a8-558d-45ab-8a87-a88094a3995d"
-
-#Login into Azure CLI
-az login 
+export AZURE_SUBSCRIPTION_ID=""
+export AZURE_TENANT_ID=""
 
 #Create an Service Principal and grant owner rights on the subscription
 az ad sp create-for-rbac --name http://vaultsp --role owner --scopes /subscriptions/$AZURE_SUBSCRIPTION_ID
 
 #Set the variables
-export AZURE_CLIENT_ID="ec79de6e-9c73-44b3-8801-f652540101ed"
-export AZURE_CLIENT_SECRET="ca1605fd-fce8-4bec-9065-20509e08fcc4"
-
-#Enable the Azure secrets engine and configure it
-vault secrets enable azure
-
-vault write azure/config \
-  subscription_id=$AZURE_SUBSCRIPTION_ID \
-  tenant_id=$AZURE_TENANT_ID \
-  client_id=$AZURE_CLIENT_ID \
-  client_secret=$AZURE_CLIENT_SECRET
-
-#Login into Azure CLI
-az login 
-
-#Create a new resource group
-az group create --name vault_test_group --location eastus
-
-#Create a new role using the vault secrets engine
-#In Linux do the following
-sed -i 's/<uuid>/$AZURE_SUBSCRIPTION_ID/g' azure-role.json
-
-#Add the role to vault
-vault write azure/roles/my-role ttl=1h azure_roles=@azure-role.json
-vault read azure/roles/my-role
-
-#Get a credential using that role
-vault read azure/creds/my-role
+export AZURE_CLIENT_ID=""
+export AZURE_CLIENT_SECRET=""
 
 #Now enable the Azure auth method
 vault auth enable azure
