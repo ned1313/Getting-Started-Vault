@@ -1,0 +1,7 @@
+{
+    "role": "ROLE_NAME_STRING",
+    "jwt": "JWT_STRING",
+    "subscription_id": "SUBSCRIPTION_ID_STRING",
+    "resource_group_name": "RESOURCE_GROUP_NAME_STRING",
+    "vm_name": "VM_NAME_STRING"
+  }
