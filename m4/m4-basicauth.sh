@@ -54,6 +54,8 @@ Invoke-WebRequest -Method List -Uri $env:VAULT_ADDR/v1/auth/userpass/users `
 #Start a second session
 vault login -method=userpass username=arthur
 
+vault token lookup
+
 #Linux
 curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST \
  --data '{"username": "ford", "password": "prefect"}' $VAULT_ADDR/v1/auth/userpass/login/ford
@@ -81,6 +83,6 @@ curl --header "X-Vault-Token: $VAULT_TOKEN" --request DELETE \
  $VAULT_ADDR/v1/auth/userpass/users/ford
 
 #For Windows
-Invoke-WebRequest -Method DELETE -Uri $env:VAULT_ADDR/v1/auth/userpass/users/ford `
+Invoke-WebRequest -Method Delete -Uri $env:VAULT_ADDR/v1/auth/userpass/users/ford `
  -UseBasicParsing -Headers $headers
 

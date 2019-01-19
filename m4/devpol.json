@@ -1,0 +1,3 @@
+{
+  "policy": "path \"devkv/*\" {\r\n  capabilities = [\"create\", \"read\", \"update\", \"delete\", \"list\"]\r\n}\r\n\r\npath \"devkv/appId*\" {\r\n  capabilities = [\"create\", \"read\", \"update\", \"delete\", \"list\"]\r\n\r\n  allowed_parameters = {\r\n    \"api-key\" = []\r\n    \"environment\" = [\"dev\", \"qa\",\"staging\",\"production\"]\r\n    \"description\" = []\r\n  }\r\n}\r\n\r\npath \"secret/data/{{identity.entity.id}}/*\" {\r\n  capabilities = [\"create\", \"update\", \"read\", \"delete\"]\r\n}\r\n\r\npath \"secret/metadata/{{identity.entity.id}}/*\" {\r\n  capabilities = [\"list\"]\r\n}"
+}

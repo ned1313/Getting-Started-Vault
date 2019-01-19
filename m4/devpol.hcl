@@ -6,7 +6,7 @@ path "devkv/appId*" {
   capabilities = ["create", "read", "update", "delete", "list"]
 
   allowed_parameters = {
-    "appId" = []
+    "api-key" = []
     "environment" = ["dev", "qa","staging","production"]
     "description" = []
   }
