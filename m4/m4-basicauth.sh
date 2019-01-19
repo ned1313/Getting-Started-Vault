@@ -22,7 +22,7 @@ $headers = @{
 vault login
 
 #List the current auth methods
-vault auth List
+vault auth list
 
 #Enable userpass auth method
 vault auth enable userpass

@@ -1,3 +1,9 @@
+#Export the Vault server running in AD environment
+export VAULT_ADDR=https://vault.globomantics.xyz:8200
+
+#Log into Vault server
+vault login
+
 #Create a new secrets engine kv path for devs
 vault secrets enable -path=devkv kv
 vault kv put devkv/alldevs answer=42
@@ -33,6 +39,15 @@ vault login -method=ldap username=adent
 vault kv put devkv/arthur ford=friend
 vault kv get devkv/arthur
 vault kv get devkv/alldevs
+
+#Put a new secret in the devkv appId path
+vault kv put devkv/appId-123 api-key=123 toast=good
+vault kv put devkv/appId-123 api-key=123 environment=toast
+vault kv put devkv/appId-123 api-key=123 environment=qa description="secret for appId 123"
+
+#Get Arthur's entity ID
+vault token lookup
+vault kv put secret/ENTITYID/friends best=ford
 
 #Try to read a secret outside the devkv path
 vault kv get secret/nodevs
