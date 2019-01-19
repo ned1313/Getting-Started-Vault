@@ -24,8 +24,8 @@ curl --header "X-Vault-Token: $VAULT_TOKEN" --request PUT \
  --data @devpol.json $VAULT_ADDR/v1/sys/policies/acl/dev-clone
 
 #For Windows
-Invoke-WebRequest -Method Post -Uri $env:VAULT_ADDR/v1/auth/userpass/users/ford `
- -UseBasicParsing -Headers $headers -Body (get-content ford.json)
+Invoke-WebRequest -Method Put -Uri $env:VAULT_ADDR/v1/sys/policies/acl/dev-clone `
+ -UseBasicParsing -Headers $headers -Body (get-content devpol.json)
 
 #List vault policies
 vault read sys/policy
@@ -35,14 +35,22 @@ curl --header "X-Vault-Token: $VAULT_TOKEN" \
     $VAULT_ADDR/v1/sys/policy
 
 #For Windows
-Invoke-WebRequest -Method Post -Uri $env:VAULT_ADDR/v1/auth/userpass/users/ford `
- -UseBasicParsing -Headers $headers -Body (get-content ford.json)
+Invoke-WebRequest -Method Get -Uri $env:VAULT_ADDR/v1/sys/policy `
+ -UseBasicParsing -Headers $headers
 
 #Put a secret that devs can't get
 vault kv put secret/nodevs mchammer=canttouchthis
 
 #Enable the LDAP auth method
 vault auth enable ldap
+
+#Linux
+curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST \
+ --data '{"type": "ldap"}' $VAULT_ADDR/v1/sys/auth/ldap
+
+#For Windows
+Invoke-WebRequest -Method Post -Uri $env:VAULT_ADDR/v1/sys/auth/ldap `
+ -UseBasicParsing -Headers $headers -Body '{"type": "ldap"}'
 
 vault write auth/ldap/config \
     url="ldaps://adDC-0.globomantics.xyz:636" \
@@ -56,6 +64,14 @@ vault write auth/ldap/config \
     certificate=@globomantics-adDC-0.pem \
     insecure_tls=false \
     starttls=true
+
+#Linux
+curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST \
+ --data @ldap-config.json $VAULT_ADDR/v1/auth/ldap/config
+
+#For Windows
+Invoke-WebRequest -Method Post -Uri $env:VAULT_ADDR/v1/auth/ldap/config `
+ -UseBasicParsing -Headers $headers -Body (Get-Content ldap-config.json)
 
 vault write auth/ldap/groups/developers policies=dev
 
@@ -73,7 +89,7 @@ vault kv put devkv/appId-123 api-key=123 environment=toast
 vault kv put devkv/appId-123 api-key=123 environment=qa description="secret for appId 123"
 
 #Can't write to secret kv in general
-vault kv put secret/arthur dolphins=gone
+vault kv put secret/arthur dolphins=solong
 #Try to read a secret outside the devkv path
 vault kv get secret/nodevs
 

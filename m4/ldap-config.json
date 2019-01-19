@@ -1,0 +1,13 @@
+{
+    "url": "ldaps://adDC-0.globomantics.xyz:636",
+    "userattr":"sAMAccountName", 
+    "userdn":"ou=Globo Users,dc=globomantics,dc=xyz",
+    "groupdn":"ou=Globo Groups,dc=globomantics,dc=xyz",
+    "groupfilter":"(&(objectClass=group)(member:1.2.840.113556.1.4.1941:={{.UserDN}}))",
+    "binddn":"cn=vault-ldap,cn=Users,dc=globomantics,dc=xyz",
+    "bindpass":"VerySecurePassword@123",
+    "groupattr":"memberOf",
+    "certificate":"PASTE_PEM_VALUE_HERE",
+    "insecure_tls":false,
+    "starttls":true
+}

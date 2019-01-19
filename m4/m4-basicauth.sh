@@ -27,6 +27,14 @@ vault auth list
 #Enable userpass auth method
 vault auth enable userpass
 
+#Linux
+curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST \
+ --data '{"type": "userpass"}' $VAULT_ADDR/v1/sys/auth/userpass
+
+#For Windows
+Invoke-WebRequest -Method Post -Uri $env:VAULT_ADDR/v1/sys/auth/userpass `
+ -UseBasicParsing -Headers $headers -Body '{"type": "userpass"}'
+
 #Explore the userpass auth method
 vault path-help auth/userpass
 
