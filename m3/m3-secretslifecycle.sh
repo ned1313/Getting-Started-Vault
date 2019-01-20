@@ -14,7 +14,7 @@ export VAULT_TOKEN=AddYourVaultTokenHere
 $env:VAULT_ADDR = "http://127.0.0.1:8200"
 $env:VAULT_TOKEN = "AddYourVaultTokenHere"
 $headers = @{
-    X-Vault-Token = $env:VAULT_TOKEN
+    "X-Vault-Token" = $env:VAULT_TOKEN
 }
 
 #Log into the vault server

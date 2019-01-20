@@ -6,7 +6,7 @@ export VAULT_TOKEN=AddYourVaultTokenHere
 $env:VAULT_ADDR = "https://vault.globomantics.xyz:8200"
 $env:VAULT_TOKEN = "AddYourVaultTokenHere"
 $headers = @{
-    X-Vault-Token = $env:VAULT_TOKEN
+    "X-Vault-Token" = $env:VAULT_TOKEN
 }
 
 #Log into Vault server
