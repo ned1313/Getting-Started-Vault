@@ -33,6 +33,8 @@ vault write auth/azure/role/web-role \
     bound_resource_groups=vault
 
 #On web server
+sudo apt update
+sudo apt install jq -y
 export VAULT_ADDR=https://vault.globomantics.xyz:8200
 
 metadata=$(curl -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2017-08-01")
@@ -44,6 +46,8 @@ resource_group_name=$(echo $metadata | jq -r .compute.resourceGroupName)
 response=$(curl 'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fmanagement.azure.com%2F' -H Metadata:true -s)
 
 jwt=$(echo $response | jq -r .access_token)
+
+vi auth_payload_complete.json
 
 sed -i "s/ROLE_NAME_STRING/web-role/g" auth_payload_complete.json
 sed -i "s/JWT_STRING/$jwt/g" auth_payload_complete.json

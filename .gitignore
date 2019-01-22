@@ -13,3 +13,6 @@
 **/vault/logs/*
 **/vault/policies/*
 *.seal
+
+# cert files
+*.pem
