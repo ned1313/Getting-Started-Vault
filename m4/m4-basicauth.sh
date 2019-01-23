@@ -77,7 +77,7 @@ vault write auth/userpass/users/arthur/password password=tricia
 
 #Linux
 curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST \
- --data '{"password": "zaphod"}' $VAULT_ADDR/v1/auth/userpass/users/ford
+ --data '{"password": "zaphod"}' $VAULT_ADDR/v1/auth/userpass/users/ford/password
 
 #For Windows
 Invoke-WebRequest -Method Post -Uri $env:VAULT_ADDR/v1/auth/userpass/users/ford `
