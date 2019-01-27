@@ -1,5 +1,5 @@
 #Install Vault
-VAULT_VERSION="1.0.0"
+VAULT_VERSION="1.0.1"
 wget https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip
 unzip vault_${VAULT_VERSION}_linux_amd64.zip
 sudo chown root:root vault
@@ -33,9 +33,9 @@ sudo mkdir /etc/vault/certs
 sudo add-apt-repository ppa:certbot/certbot -y
 sudo apt-get update
 sudo apt-get install certbot -y
-sudo certbot certonly --standalone --email ned@nedinthecloud.com -d vault.globomantics.xyz --agree-tos
-sudo cp /etc/letsencrypt/live/vault.globomantics.xyz/fullchain.pem /etc/vault/certs/vault_cert.crt
-sudo cp /etc/letsencrypt/live/vault.globomantics.xyz/privkey.pem /etc/vault/certs/vault_cert.key
+sudo certbot certonly --standalone --email ned@nedinthecloud.com -d vault-1.globomantics.xyz --agree-tos
+sudo cp /etc/letsencrypt/live/vault-1.globomantics.xyz/fullchain.pem /etc/vault/certs/vault_cert.crt
+sudo cp /etc/letsencrypt/live/vault-1.globomantics.xyz/privkey.pem /etc/vault/certs/vault_cert.key
 sudo chown --recursive vault:vault /etc/vault/certs
 sudo chmod 750 --recursive /etc/vault/certs/
 
@@ -43,7 +43,7 @@ sudo chmod 750 --recursive /etc/vault/certs/
 sudo vi /etc/hosts
 
 #Set environment variable for vault server
-export VAULT_ADDR=https://server:8200
+export VAULT_ADDR=https://vault-1.globomantics.xyz:8200
 
 #Install auditd and the Log Analytics agent
 sudo mkdir /var/log/vault
