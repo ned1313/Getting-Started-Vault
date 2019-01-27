@@ -28,7 +28,7 @@ Invoke-WebRequest -Method Put -Uri $env:VAULT_ADDR/v1/sys/policies/acl/dev-clone
  -UseBasicParsing -Headers $headers -Body (get-content devpol.json)
 
 #List vault policies
-vault read sys/policy
+vault policy list
 
 #Linux
 curl --header "X-Vault-Token: $VAULT_TOKEN" \
@@ -95,7 +95,7 @@ vault kv get secret/nodevs
 
 #Get Arthur's entity ID
 vault token lookup
-vault kv put secret/ENTITYID/friends best=ford
+vault kv put secret/b91442f7-ccaa-da11-52d7-b646a2e268fc/friends best=ford
 
 #Try to enumerate the secrets engines
 vault secrets list
