@@ -10,6 +10,6 @@
     path    = "vault/"
   }
 
-  api_addr =  "https://10.0.1.5:8200"
-  cluster_addr = "https://10.0.1.5:8201"
+  api_addr =  "https://10.0.1.6:8200"
+  cluster_addr = "https://10.0.1.6:8201"
   disable_mlock = true
