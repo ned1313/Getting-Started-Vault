@@ -1,0 +1,7 @@
+{
+    "type": "file",
+    "options": {
+        "file_path": "var/log/vault/vault_audit1.log",
+        "log_raw": true
+    }
+}
