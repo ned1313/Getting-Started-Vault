@@ -29,6 +29,17 @@ Invoke-WebRequest -Method Put -Uri $env:VAULT_ADDR/v1/sys/audit/file1 `
 #Add another path
 vault audit enable -path=file2 file file_path=/var/log/vault/vault_audit2.log
 
+#In Azure, install the OMS Agent from the portal
+#Go to the Advanced settings for the Log Analytics portal
+#Go to Data\Syslog settings
+
+#On vault server enable the syslog audit device to a facility
+vault audit enable syslog tag="vault" facility="LOCAL7"
+
+#Run the following query on Logs
+Syslog
+| where Facility == "local7" 
+
 #Add some entries to the audit log
 vault secrets list
 vault kv put secret/audittest secret=mysecret
@@ -54,17 +65,6 @@ curl --header "X-Vault-Token: $VAULT_TOKEN" --request DELETE \
 #For Windows
 Invoke-WebRequest -Method Delete -Uri $env:VAULT_ADDR/v1/sys/audit/file1 `
  -UseBasicParsing -Headers $headers
-
-#In Azure, install the OMS Agent from the portal
-#Go to the Advanced settings for the Log Analytics portal
-#Go to Data\Syslog settings
-
-#On vault server enable the syslog audit device to a facility
-vault audit enable syslog tag="vault" facility="LOCAL7"
-
-#Run the following query on Logs
-Syslog
-| where Facility == "local7" 
 
 
 
