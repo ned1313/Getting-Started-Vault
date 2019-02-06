@@ -50,7 +50,7 @@ sudo cat /var/log/vault/vault_audit.log | jq
 
 sudo tail -1 /var/log/vault/vault_audit2.log | jq
 
-sudo tail -1 /var/log/vault/vault_audit2.log | jq -r .response.data.data.secret
+sudo tail -1 /var/log/vault/vault_audit2.log | jq -r .response.data.secret
 
 curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST \
  --data '{"input": "mysecret"}' $VAULT_ADDR/v1/sys/audit-hash/file2 | jq -r .data.hash
