@@ -1,3 +1,15 @@
+#Set env variable
+#For Linux/MacOS
+export VAULT_ADDR=https://vault-1.globomantics.xyz:8200
+export VAULT_TOKEN=AddYourVaultTokenHere
+
+#For Windows
+$env:VAULT_ADDR = "https://vault-1.globomantics.xyz:8200"
+$env:VAULT_TOKEN = "AddYourVaultTokenHere"
+$headers = @{
+    "X-Vault-Token" = $env:VAULT_TOKEN
+}
+
 #Configuring local file auditing
 
 #Create the directory that vault will write to
