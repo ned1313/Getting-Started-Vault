@@ -1,9 +1,11 @@
 # LINUX
+az account show --subscription MAS
+
 export AZURE_SUBSCRIPTION_ID=""
 export AZURE_TENANT_ID=""
 
 #Create an Service Principal and grant owner rights on the subscription
-az ad sp create-for-rbac --name http://vaultsp --role owner --scopes /subscriptions/$AZURE_SUBSCRIPTION_ID
+az ad sp create-for-rbac --name http://vault-hugs --role contributor --scopes /subscriptions/AZURE_SUBSCRIPTION_ID
 
 #Set the variables
 export AZURE_CLIENT_ID=""
@@ -21,7 +23,7 @@ vault write auth/azure/config \
 
 #Create a web kv store
 vault secrets enable -path=webkv kv
-vault kv put webkv/webpass password=marvin
+vault kv put webkv/webpass password=hugs-for-all
 
 #Create a web policy
 vault policy write web webpol.hcl
@@ -30,12 +32,13 @@ vault policy write web webpol.hcl
 vault write auth/azure/role/web-role \
     policies="web" \
     bound_subscription_ids=$AZURE_SUBSCRIPTION_ID \
-    bound_resource_groups=vault
+    bound_resource_groups=HashiTalks
 
 #On web server
 sudo apt update
-sudo apt install jq -y
-export VAULT_ADDR=https://vault.globomantics.xyz:8200
+sudo apt install nginx jq -y
+sudo ufw allow 'Nginx HTTP'
+export VAULT_ADDR=https://vault.azslab.us:8200
 
 metadata=$(curl -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2017-08-01")
 
@@ -47,7 +50,7 @@ response=$(curl 'http://169.254.169.254/metadata/identity/oauth2/token?api-versi
 
 jwt=$(echo $response | jq -r .access_token)
 
-vi auth_payload_complete.json
+cp auth_payload.json auth_payload_complete.json
 
 sed -i "s/ROLE_NAME_STRING/web-role/g" auth_payload_complete.json
 sed -i "s/JWT_STRING/$jwt/g" auth_payload_complete.json
@@ -59,4 +62,19 @@ login=$(curl --request POST --data @auth_payload_complete.json $VAULT_ADDR/v1/au
 
 export VAULT_TOKEN=$(echo $login | jq -r .auth.client_token)
 
-curl --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_ADDR/v1/webkv/webpass
+webpass=$(curl --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_ADDR/v1/webkv/webpass | jq -r .data.password)
+
+cat <<EOM >~/index.html
+<html>
+    <head>
+        <title>Welcome to HashiTalks!</title>
+    </head>
+    <body>
+        <h1>The secret passphrase is: $webpass</h1>
+    </body>
+</html>
+EOM
+
+sudo cp ~/index.html /var/www/html/index.html
+sudo ufw allow 'Nginx HTTP'
+sudo systemctl restart nginx
