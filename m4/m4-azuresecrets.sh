@@ -5,7 +5,7 @@ export AZURE_SUBSCRIPTION_ID=""
 export AZURE_TENANT_ID=""
 
 #Create an Service Principal and grant owner rights on the subscription
-az ad sp create-for-rbac --name http://vault-hugs --role contributor --scopes /subscriptions/AZURE_SUBSCRIPTION_ID
+az ad sp create-for-rbac --name http://vault-hugs --role contributor --scopes /subscriptions/SUB_ID
 
 #Set the variables
 export AZURE_CLIENT_ID=""
@@ -76,5 +76,4 @@ cat <<EOM >~/index.html
 EOM
 
 sudo cp ~/index.html /var/www/html/index.html
-sudo ufw allow 'Nginx HTTP'
 sudo systemctl restart nginx
