@@ -5,7 +5,7 @@ $vaultVersion = "1.0.1"
 Invoke-WebRequest -Uri https://releases.hashicorp.com/vault/$vaultVersion/vault_$($vaultVersion)_windows_amd64.zip -OutFile .\vault_$($vaultVersion)_windows_amd64.zip
 Expand-Archive .\vault_$($vaultVersion)_windows_amd64.zip
 cd .\vault_$($vaultVersion)_windows_amd64
-#Copy vault executable to a location include in your path variable
+#Copy vault executable to a location included in your path variable
 
 #For Linux
 VAULT_VERSION="1.0.1"
